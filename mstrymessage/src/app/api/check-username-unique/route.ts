@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { usernameValidation } from '@/schemas/signUpSchema';
 
 const UsernameQuerySchema = z.object({
-  username: usernameValidation,
+  username: usernameValidation, // Reuse the same validation as in signUpSchema that will ensure the username should be between 2 to 20 characters and should not contain special characters
 });
 
 export async function GET(request: Request) {
@@ -72,6 +72,49 @@ export async function GET(request: Request) {
 
 
 
+
+/*
+import dbConnect from '@/lib/dbConnect'
+import UserModel from '@/model/User'
+import {z} from 'zod'
+import {usernameValidation} from '@/schemas/signUpSchema
+
+const UsernameQuerySchema = z.object({
+    username: usernameValidation})
+
+export async function GET(request: Request){
+   await dbConnect();
+
+
+   try{
+    const {searchParams} = new URL(request.url);
+    const queryParams = {
+     username: searchParams.get('username')
+    }
+
+    const result = UsernameQuerySchema.safeParse(queryParams)
+    
+   }catch(error){
+    
+   }
+}
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 Scenario 1: Username Available
 1. User types: "newuser123"
@@ -92,3 +135,10 @@ Scenario 2: Username Taken
 6. API returns: "Username taken hai"
 7. Website shows: "❌ Username already taken"
 */
+
+
+
+
+
+
+

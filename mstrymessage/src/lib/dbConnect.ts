@@ -13,7 +13,7 @@ const connection: ConnectionObject = {}
 // a database connection may fail also    
 // a database value will always written the promise 
 
-async function dbConnect(): Promise<void>{
+export async function dbConnect(): Promise<void>{
     if(connection.isConnected){
         console.log("Already connected to database")
         return

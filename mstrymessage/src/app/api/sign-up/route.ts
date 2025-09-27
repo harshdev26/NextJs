@@ -1,12 +1,11 @@
 //we are creating this file just because this file is used to handle the sign up request from the client side and this file is also used to create a new user in the database 
 
 
-import dbConnect from '@/lib/dbConnect'; //this is using to connect database because this is the file where we are connecting to the database 
+import { dbConnect } from '@/lib/dbConnect'; //this is using to connect database because this is the file where we are connecting to the database 
 import UserModel from '@/model/User'; //use of this file is to access the user model because this file contains the schema of the user Model
-import bcrypt from 'brcyptjs'; //we are using bcryptjs because this is used to hash the password of the user before storing it in the database 
+import bcrypt from 'bcryptjs'; //we are using bcryptjs because this is used to hash the password of the user before storing it in the database 
 import {sendVerificationEmail} from '@/helpers/sendVerificationEmail';//this is using because this file contains the function to send the verification email to the user 
-import { usernameValidation } from '@/schemas/signUpSchema';
-import { email, success } from 'zod';
+
 
 export async function POST(request: Request) {
 
@@ -31,7 +30,7 @@ export async function POST(request: Request) {
         }
 
         const existingUserByEmail = await UserModel.findOne({ email });
-        let verifyCode = Math.floor(100000 + Math.random() * 900000).toString(); //this is used to generate a random 6 digit verification code and we are converting it to string because we are storing it in the database as a string.
+        const verifyCode = Math.floor(100000 + Math.random() * 900000).toString(); //this is used to generate a random 6 digit verification code and we are converting it to string because we are storing it in the database as a string.
 
         if(existingUserByEmail){
             if(existingUserByEmail.isVerified){

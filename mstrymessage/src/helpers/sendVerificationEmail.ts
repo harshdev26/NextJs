@@ -9,7 +9,7 @@ export async function sendVerificationEmail( //function to send verification ema
 ): Promise<ApiResponse>{ // returning a promise of the ApiResponse type because this function is asynchronous and will return a promise that resolves to an object of the ApiResponse type 
     try{
     
-    const { data, error } = await resend.emails.send({ // sending the email using the resend instance
+    await resend.emails.send({ // sending the email using the resend instance
     from: 'Acme <onboarding@resend.dev>', 
     to: ['delivered@resend.dev'],
     subject: 'Mystery Message Verification Code',

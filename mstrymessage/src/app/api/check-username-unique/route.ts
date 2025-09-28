@@ -93,11 +93,150 @@ export async function GET(request: Request){
     }
 
     const result = UsernameQuerySchema.safeParse(queryParams)
-    
-   }catch(error){
-    
+     
+     if(!result.success){
+     const usernameErrors = result.error.format().username?._errors || [];
+     return Response.json(
+     {
+       success: false,
+       message:
+       usernameErrors?.length > 0
+       ? usernameErrors.join(',') 
+       :  'Invalid query parameters',
+     },
+     {status: 400} 
+    );    
    }
+  
+   const {username} = result.data
+   
+   const existingVerifiedUser = await UserModel.findOne({
+      username,
+      isVerified: true
+   });
+
+
+   if(existingVerifiedUser){
+     return Response.json(
+      {
+         success: false,
+         message: 'Username is already taken'
+      }
+     );
+
+   }
+
+   return Response.json(
+   { 
+      success: 'true',
+      message: 'Username is unique',
+   }),
+
+   {status: 200}
+
+
+   }catch(error){
+    console.error('Error checking username: ', error);
+    return Response.json(
+      {
+        success: false,
+        message: 'Error checking username', 
+      },
+      {status: 500}
+    );
+  }
 }
+
+steps to be done:-
+1> db connect karo
+2> username mein usernameValidation lagao
+3> url decode karo
+4> usse username nikaal lo aur check karo woh usernamevalidation se verified hei ki nahi 
+5> username ko result mein store karo 
+6> ab uss username ko databasee mein find karo 
+7> username mile toh json format mei message throw kardo username alrready exist Taken
+8> otherwise throw the message username is unique.
+
+
+
+import dbConnect 
+import UserModel
+import z from zod
+import usernameValidation
+
+
+const UsernameQuerySchema = z.object({
+   username: usernameValidation
+})
+
+
+export async function GET(request: Request){
+  await dbConnect();
+
+try{
+  const {searchParams} = new URL(request.url);
+  const queryParams = {
+    username: searchParams.get('username'); 
+    }
+
+    const result = UsernameQuerySchema.safeParse('queryParams') //will check the validatiion
+  
+    if(!result.success){
+     const usernameErrors = result.error.format().username?._errors || []
+     return Response.json({
+      success: false,
+      message: 
+        usernameError?.length > 0
+        ? usernameErrors.join(',')
+        : 'Invalid query parameters',
+     },
+      {status: 500}
+     )
+    }
+
+  const {username} = result.data;
+
+  const existingVerifiedUser = await UserModel.findOne({
+    username,
+    isVerified: true
+  })
+  if (existingVerifiedUser){
+  
+        return Response.json({
+    
+       success: true,
+       message: "username already taken",
+
+    
+  })
+  
+  }
+ 
+  return Response.json({
+    success : true,
+    message : "username is unique"
+   
+  },
+  { status:200 }
+  )
+
+
+  }catch(error){
+   console.log('Error checking username', error);
+   return Response.json(
+    {
+      success: false,
+      message: 'Error checking username'
+    },
+
+    {status : 500}
+   )
+
+  }
+}
+
+
+
 
 */
 

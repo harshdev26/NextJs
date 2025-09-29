@@ -5,7 +5,7 @@ Real Life Example:
 */
 
 
-
+ 
 import { dbConnect } from '@/lib/dbConnect';
 import UserModel from '@/model/User';
 
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const { username, code } = await request.json();
     const decodedUsername = decodeURIComponent(username);
     const user = await UserModel.findOne({ username: decodedUsername });
-
+  
     if (!user) {
       return Response.json(
         { success: false, message: 'User not found' },
@@ -26,6 +26,7 @@ export async function POST(request: Request) {
     }
 
     // Check if the code is correct and not expired
+    
     const isCodeValid = user.verifyCode === code; 
     const isCodeNotExpired = new Date(user.verifyCodeExpiry) > new Date();
 
@@ -63,3 +64,6 @@ export async function POST(request: Request) {
     );
   }
 }
+
+
+
